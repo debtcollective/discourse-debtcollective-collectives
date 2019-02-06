@@ -1,0 +1,4 @@
+plugins:
+  discourse_debtcollective_collectives_enabled:
+    default: true
+    client: true
