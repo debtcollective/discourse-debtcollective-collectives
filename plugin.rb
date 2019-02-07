@@ -53,7 +53,7 @@ after_initialize do
     end
 
     def collective_group(collective)
-      collective.groups.where.not(id: Group::AUTO_GROUPS.values).first
+      collective.groups.where.not(id: Group::AUTO_GROUP_IDS).first&.name
     end
   end
 
@@ -65,4 +65,11 @@ after_initialize do
     mount ::DiscourseDebtcollectiveCollectives::Engine, at: "/collectives"
   end
 
+  add_to_serializer(:basic_category, :is_collective) do
+    object.custom_fields["tdc_is_collective"] === "t"
+  end
+
+  add_to_serializer(:basic_category, :collective_group) do
+    object.groups.where.not(id: Group::AUTO_GROUP_IDS).first&.name
+  end
 end
