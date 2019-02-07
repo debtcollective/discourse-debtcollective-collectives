@@ -38,8 +38,13 @@ after_initialize do
         return render json: failed_json, status: 400
       end
 
+      # add to group
       group.add(current_user)
       group.save!
+
+      # set category notification level
+      notification_level = CategoryUser.notification_levels[:watching_first_post]
+      CategoryUser.set_notification_level_for_category(current_user, notification_level, @category.id)
 
       render json: success_json
     end
