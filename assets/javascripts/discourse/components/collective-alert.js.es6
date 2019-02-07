@@ -56,7 +56,10 @@ export default Ember.Component.extend({
       })
         .then(() => {
           this.set("joined", true);
-          setTimeout(() => (window.location.href = window.location.href), 0);
+
+          // reload to make the composer pick up permissions changes
+          // improve this is we find a better way to do it
+          window.location.href = window.location.href;
         })
         .catch(error => {
           throw error;

@@ -21,6 +21,8 @@ after_initialize do
   require_dependency "application_controller"
   class DiscourseDebtcollectiveCollectives::CollectivesController < ::ApplicationController
     requires_plugin PLUGIN_NAME
+
+    before_action :ensure_logged_in
     before_action :find_category
 
     def join
@@ -53,7 +55,7 @@ after_initialize do
     end
 
     def collective_group(collective)
-      collective.groups.where.not(id: Group::AUTO_GROUP_IDS).first&.name
+      collective.groups.where.not(id: Group::AUTO_GROUPS.values).first
     end
   end
 
@@ -70,6 +72,6 @@ after_initialize do
   end
 
   add_to_serializer(:basic_category, :collective_group) do
-    object.groups.where.not(id: Group::AUTO_GROUP_IDS).first&.name
+    object.groups.where.not(id: Group::AUTO_GROUPS.values).first&.name
   end
 end

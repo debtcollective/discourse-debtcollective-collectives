@@ -20,6 +20,9 @@ describe ::DiscourseDebtcollectiveCollectives::CollectivesController do
 
     context 'with invalid collective id' do
       it 'returns 404' do
+        user = Fabricate(:user)
+        sign_in(user)
+
         put "/collectives/123/join.json"
 
         expect(response.status).to eq(404)
@@ -30,7 +33,6 @@ describe ::DiscourseDebtcollectiveCollectives::CollectivesController do
       it 'returns 400' do
         user = Fabricate(:user)
         category = Fabricate(:category, name: 'Category')
-
         sign_in(user)
 
         put "/collectives/#{category.id}/join.json"
