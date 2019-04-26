@@ -1,4 +1,4 @@
-# name: Discourse Debtcollective Collectives
+# name: discourse-debtcollective-collectives
 # about: This plugins turns whitelisted categories into collectives
 # version: 0.1
 # authors: debtcollective
@@ -79,4 +79,12 @@ after_initialize do
   add_to_serializer(:basic_category, :collective_group) do
     object.groups.where.not(id: Group::AUTO_GROUPS.values).first&.name
   end
+
+  # preload Category custom fields
+  category_ids = Category.all.map do |cat|
+    cat.id if cat.custom_fields['tdc_is_collective']
+  end.compact
+  categories = Category.find(category_ids)
+
+  Category.preload_custom_fields(categories, Set["tdc_is_collective"])
 end
