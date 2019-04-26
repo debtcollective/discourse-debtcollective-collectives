@@ -56,7 +56,7 @@ after_initialize do
     end
 
     def is_collective?(category)
-      category.custom_fields["tdc_is_collective"] === "t"
+      !!category.custom_fields["tdc_is_collective"]
     end
 
     def collective_group(collective)
@@ -72,14 +72,14 @@ after_initialize do
     mount ::DiscourseDebtcollectiveCollectives::Engine, at: "/collectives"
   end
 
+  Category.register_custom_field_type("tdc_is_collective", :boolean)
+  Site.preloaded_category_custom_fields << "tdc_is_collective" if Site.respond_to? :preloaded_category_custom_fields
+
   add_to_serializer(:basic_category, :is_collective) do
-    object.custom_fields["tdc_is_collective"] === "t"
+    !!object.custom_fields["tdc_is_collective"]
   end
 
   add_to_serializer(:basic_category, :collective_group) do
     object.groups.where.not(id: Group::AUTO_GROUPS.values).first&.name
   end
-
-  # preload Category custom fields
-  Category.preload_custom_fields(Category.all, Set["tdc_is_collective"])
 end
