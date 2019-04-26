@@ -81,10 +81,5 @@ after_initialize do
   end
 
   # preload Category custom fields
-  category_ids = Category.all.map do |cat|
-    cat.id if cat.custom_fields['tdc_is_collective']
-  end.compact
-  categories = Category.find(category_ids)
-
-  Category.preload_custom_fields(categories, Set["tdc_is_collective"])
+  Category.preload_custom_fields(Category.all, Set["tdc_is_collective"])
 end
