@@ -1,6 +1,13 @@
-.alert-collective-alert {
-  display: flex;
-  justify-content: space-between;
+$colorWarning: #ffc957;
+$colorWarningLight: #ffef9e;
+
+.alert.alert-collective-alert {
   align-items: center;
+  background-color: $colorWarningLight;
+  border-radius: 4px;
+  border: 1px solid $colorWarning;
+  display: flex;
+  font-size: 16px;
+  justify-content: space-between;
   padding: 8px 14px;
 }
