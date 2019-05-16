@@ -33,7 +33,11 @@ export default Ember.Component.extend({
 
   didReceiveAttrs() {
     this._super(...arguments);
-    const { category, currentUser } = this;
+    let { category, currentUser, topic } = this;
+
+    if (topic) {
+      category = topic.category;
+    }
 
     if (
       !currentUser ||
@@ -52,7 +56,7 @@ export default Ember.Component.extend({
 
       ajax(`/collectives/${this.category.id}/join`, {
         type: "PUT",
-        contentType: "application/json"
+        contentType: "application/json",
       })
         .then(() => {
           this.set("joined", true);
@@ -64,6 +68,6 @@ export default Ember.Component.extend({
         .catch(error => {
           throw error;
         });
-    }
-  }
+    },
+  },
 });
