@@ -10,4 +10,30 @@ $colorWarningLight: #ffef9e;
   font-size: 16px;
   justify-content: space-between;
   padding: 8px 14px;
+  margin-bottom: 15px;
+}
+
+// when rendering inside a topic
+.topic-above-post-stream-outlet {
+  .alert.alert-collective-alert {
+    margin-bottom: 0;
+  }
+}
+
+nav.post-controls {
+  button.create {
+    &[disabled] {
+      cursor: not-allowed;
+      color: $secondary-high;
+
+      &:hover {
+        color: $secondary-high;
+        background: transparent;
+      }
+
+      .d-icon {
+        color: $secondary-high;
+      }
+    }
+  }
 }
