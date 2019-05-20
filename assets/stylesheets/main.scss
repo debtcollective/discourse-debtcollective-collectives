@@ -1,6 +1,39 @@
-.alert-collective-alert {
-  display: flex;
-  justify-content: space-between;
+$colorWarning: #ffc957;
+$colorWarningLight: #ffef9e;
+
+.alert.alert-collective-alert {
   align-items: center;
+  background-color: $colorWarningLight;
+  border-radius: 4px;
+  border: 1px solid $colorWarning;
+  display: flex;
+  font-size: 16px;
+  justify-content: space-between;
   padding: 8px 14px;
+  margin-bottom: 15px;
+}
+
+// when rendering inside a topic
+.topic-above-post-stream-outlet {
+  .alert.alert-collective-alert {
+    margin-bottom: 0;
+  }
+}
+
+nav.post-controls {
+  button.create {
+    &[disabled] {
+      cursor: not-allowed;
+      color: $secondary-high;
+
+      &:hover {
+        color: $secondary-high;
+        background: transparent;
+      }
+
+      .d-icon {
+        color: $secondary-high;
+      }
+    }
+  }
 }

@@ -1,6 +1,6 @@
 en:
   js:
     discourse_debtcollective_collectives:
-      alert: "Want to join the conversation? Join this Collective to be able to comment or start new topics."
-      joined: "Thanks for joining!"
-      join: "Join Collective"
+      alert: "<b>Join this Collective to comment and start new topics</b>."
+      joined: "Thanks for joining! The page will reload."
+      join: "Join"

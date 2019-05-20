@@ -1,9 +1,13 @@
 {{#unless hidden}}
 <div class="row">
   <div class="alert alert-info alert-collective-alert">
-    {{message}}
+    <span>
+      {{{message}}}
+    </span>
     {{d-button action=(action "join")
-    label="discourse_debtcollective_collectives.join" disabled=disabled}}
+    class="btn-primary"
+    label="discourse_debtcollective_collectives.join"
+    disabled=disabled}}
   </div>
 </div>
 {{/unless}}

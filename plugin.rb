@@ -5,6 +5,7 @@
 # url: https://github.com/debtcollective/discourse-debtcollective-collectives
 
 register_asset "stylesheets/main.scss"
+register_asset "stylesheets/mobile.scss", :mobile
 
 enabled_site_setting :discourse_debtcollective_collectives_enabled
 
