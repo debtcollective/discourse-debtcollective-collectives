@@ -5,6 +5,9 @@ export default Ember.Component.extend({
   disabled: false,
   hidden: false,
   joined: false,
+  sticky: true,
+
+  classNameBindings: ["sticky:is-sticky"],
 
   @computed("joined")
   message(joined) {
@@ -12,6 +15,10 @@ export default Ember.Component.extend({
 
     if (joined) {
       message = I18n.t("discourse_debtcollective_collectives.joined");
+    }
+
+    if (this.isTopic()) {
+      message = I18n.t("discourse_debtcollective_collectives.topic");
     }
 
     return message;
@@ -27,6 +34,10 @@ export default Ember.Component.extend({
     return category;
   },
 
+  isTopic() {
+    return !!this.topic;
+  },
+
   isCollectiveMember(user, category) {
     if (!user) {
       return false;
@@ -39,6 +50,38 @@ export default Ember.Component.extend({
 
   isCategoryCollective(category) {
     return category && category.is_collective;
+  },
+
+  // bind events for sticky scrolling
+  didInsertElement() {
+    this._super(...arguments);
+
+    // set width of the container after render
+    this.setAlertWidth();
+
+    // bind resize to update width
+    $(window).on(
+      "resize.collectiveAlert",
+      _.debounce(() => {
+        this.setAlertWidth();
+      }, 150)
+    );
+  },
+
+  setAlertWidth() {
+    const mainOutletWidth = $("#main-outlet").width();
+
+    $(this.element)
+      .find(".alert-collective-alert")
+      .css("width", `${mainOutletWidth}px`);
+  },
+
+  // unbind events and clean up
+  willDestroyElement() {
+    this._super(...arguments);
+
+    // off resize event
+    $(window).off("resize.collectiveAlert");
   },
 
   didReceiveAttrs() {
