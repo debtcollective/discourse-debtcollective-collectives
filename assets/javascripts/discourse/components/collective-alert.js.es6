@@ -5,7 +5,7 @@ export default Ember.Component.extend({
   disabled: false,
   hidden: false,
   joined: false,
-  sticky: true,
+  sticky: false,
 
   classNameBindings: ["sticky:is-sticky"],
 
@@ -38,14 +38,19 @@ export default Ember.Component.extend({
     return !!this.topic;
   },
 
-  isCollectiveMember(user, category) {
-    if (!user) {
+  isCollectiveMember() {
+    const { currentUser } = this;
+    const category = this.safeCategory();
+
+    if (!currentUser) {
       return false;
     }
 
     const collectiveGroup = category.collective_group;
 
-    return user.filteredGroups.map(item => item.name).includes(collectiveGroup);
+    return currentUser.filteredGroups
+      .map(item => item.name)
+      .includes(collectiveGroup);
   },
 
   isCategoryCollective(category) {
@@ -60,11 +65,29 @@ export default Ember.Component.extend({
     this.setAlertWidth();
 
     // bind resize to update width
+    this.listenResize();
+
+    // listen for clicks in reply buttons
+    // only execute if member is not in collective
+    if (!this.isCollectiveMember()) this.listenReplyClick();
+  },
+
+  listenResize() {
     $(window).on(
       "resize.collectiveAlert",
       _.debounce(() => {
         this.setAlertWidth();
       }, 150)
+    );
+  },
+
+  listenReplyClick() {
+    $("#main-outlet").on(
+      "click.replyCollectiveAlert",
+      "button[data-replynopermission], .btn-primary.create",
+      () => {
+        this.set("sticky", true);
+      }
     );
   },
 
@@ -82,6 +105,10 @@ export default Ember.Component.extend({
 
     // off resize event
     $(window).off("resize.collectiveAlert");
+
+    // off reply click event
+    $("#main-outlet").off("click.replyCollectiveAlert");
+    $("#main-outlet").off("click.collectiveAlert");
   },
 
   didReceiveAttrs() {
@@ -95,7 +122,7 @@ export default Ember.Component.extend({
     if (
       !currentUser ||
       !this.isCategoryCollective(category) ||
-      this.isCollectiveMember(currentUser, category)
+      this.isCollectiveMember()
     ) {
       return this.set("hidden", true);
     }
