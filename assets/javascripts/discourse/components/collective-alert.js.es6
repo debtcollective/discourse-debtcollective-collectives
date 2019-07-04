@@ -5,6 +5,9 @@ export default Ember.Component.extend({
   disabled: false,
   hidden: false,
   joined: false,
+  sticky: false,
+
+  classNameBindings: ["sticky:is-sticky"],
 
   @computed("joined")
   message(joined) {
@@ -12,6 +15,10 @@ export default Ember.Component.extend({
 
     if (joined) {
       message = I18n.t("discourse_debtcollective_collectives.joined");
+    }
+
+    if (this.isTopic()) {
+      message = I18n.t("discourse_debtcollective_collectives.topic");
     }
 
     return message;
@@ -27,18 +34,94 @@ export default Ember.Component.extend({
     return category;
   },
 
-  isCollectiveMember(user, category) {
-    if (!user) {
+  isTopic() {
+    return !!this.topic;
+  },
+
+  isCollectiveMember() {
+    const { currentUser } = this;
+    const category = this.safeCategory();
+
+    if (!currentUser || !category) {
       return false;
     }
 
     const collectiveGroup = category.collective_group;
 
-    return user.filteredGroups.map(item => item.name).includes(collectiveGroup);
+    return currentUser.filteredGroups
+      .map(item => item.name)
+      .includes(collectiveGroup);
   },
 
   isCategoryCollective(category) {
     return category && category.is_collective;
+  },
+
+  // bind events for sticky scrolling
+  didInsertElement() {
+    this._super(...arguments);
+
+    // set width of the container after render
+    this.setAlertWidth();
+
+    // bind resize to update width
+    this.listenResize();
+
+    // listen for clicks in reply buttons
+    // only execute if member is not in collective
+    if (!this.isCollectiveMember()) this.listenReplyClick();
+  },
+
+  listenResize() {
+    $(window).on(
+      "resize.collectiveAlert",
+      _.debounce(() => {
+        this.setAlertWidth();
+      }, 150)
+    );
+  },
+
+  listenReplyClick() {
+    $("#main-outlet").on(
+      "click.replyCollectiveAlert",
+      "button[data-replynopermission], .btn-primary.create",
+      () => {
+        this.setSticky();
+      }
+    );
+  },
+
+  setSticky() {
+    if (this.sticky) {
+      return;
+    }
+
+    this.set("sticky", true);
+
+    // add more padding to topic-title to prevent alert from covering it
+    // add a small separation;
+    const alertHeight = $(this.element).outerHeight() + 14;
+    $("#topic-title").css("padding-top", `${alertHeight}px`);
+  },
+
+  setAlertWidth() {
+    const mainOutletWidth = $("#main-outlet").width();
+
+    $(this.element)
+      .find(".alert-collective-alert")
+      .css("width", `${mainOutletWidth}px`);
+  },
+
+  // unbind events and clean up
+  willDestroyElement() {
+    this._super(...arguments);
+
+    // off resize event
+    $(window).off("resize.collectiveAlert");
+
+    // off reply click event
+    $("#main-outlet").off("click.replyCollectiveAlert");
+    $("#main-outlet").off("click.collectiveAlert");
   },
 
   didReceiveAttrs() {
@@ -52,7 +135,7 @@ export default Ember.Component.extend({
     if (
       !currentUser ||
       !this.isCategoryCollective(category) ||
-      this.isCollectiveMember(currentUser, category)
+      this.isCollectiveMember()
     ) {
       return this.set("hidden", true);
     }

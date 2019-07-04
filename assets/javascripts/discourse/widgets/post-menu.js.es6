@@ -242,7 +242,10 @@ registerButton("reply", (attrs, state, siteSettings, postMenuSettings) => {
   // we could assume that always is the case?
 
   if (!attrs.canCreatePost) {
-    args.data = { popover: "You don't have permission to post" };
+    args.data = {
+      popover: I18n.t("discourse_debtcollective_collectives.no_permission"),
+      replyNoPermission: true,
+    };
     args.title = null;
   }
 
