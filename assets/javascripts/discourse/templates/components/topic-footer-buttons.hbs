@@ -38,11 +38,19 @@
                   tagName=""
                   connectorTagName="span"}}
 
+  {{#if topic.details.can_create_post}}
   {{d-button class="btn-primary create"
                icon="reply"
                action=replyToPost
                label="topic.reply.title"
                title="topic.reply.help"}}
+  {{else}}
+  {{d-button class="btn-primary create disabled"
+               icon="reply"
+               action=replyToPost
+               label="topic.reply.title"
+               title="discourse_debtcollective_collectives.no_permission"}}
+  {{/if}}
 
   {{plugin-outlet name="after-topic-footer-main-buttons"
                   args=(hash topic=topic)

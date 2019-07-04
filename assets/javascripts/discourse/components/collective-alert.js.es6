@@ -42,7 +42,7 @@ export default Ember.Component.extend({
     const { currentUser } = this;
     const category = this.safeCategory();
 
-    if (!currentUser) {
+    if (!currentUser || !category) {
       return false;
     }
 
@@ -86,9 +86,22 @@ export default Ember.Component.extend({
       "click.replyCollectiveAlert",
       "button[data-replynopermission], .btn-primary.create",
       () => {
-        this.set("sticky", true);
+        this.setSticky();
       }
     );
+  },
+
+  setSticky() {
+    if (this.sticky) {
+      return;
+    }
+
+    this.set("sticky", true);
+
+    // add more padding to topic-title to prevent alert from covering it
+    // add a small separation;
+    const alertHeight = $(this.element).outerHeight() + 14;
+    $("#topic-title").css("padding-top", `${alertHeight}px`);
   },
 
   setAlertWidth() {
