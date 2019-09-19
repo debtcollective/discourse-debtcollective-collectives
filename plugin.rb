@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # name: discourse-debtcollective-collectives
 # about: This plugins turns whitelisted categories into collectives
 # version: 0.1
@@ -43,9 +45,10 @@ after_initialize do
       group.add(current_user)
       group.save!
 
-      # set category notification level
-      notification_level = CategoryUser.notification_levels[:watching_first_post]
-      CategoryUser.set_notification_level_for_category(current_user, notification_level, @category.id)
+      # use group notification level for the category
+      category_id = @category.id
+      notification_level = group.default_notification_level
+      CategoryUser.set_notification_level_for_category(current_user, notification_level, category_id)
 
       render json: success_json
     end
