@@ -49,8 +49,8 @@ export default Ember.Component.extend({
     const collectiveGroup = category.collective_group;
 
     return currentUser.filteredGroups
-      .map(item => item.name)
-      .includes(collectiveGroup);
+      .map((item) => item.name)
+      .includes(collectiveGroup.name);
   },
 
   isCategoryCollective(category) {
@@ -159,7 +159,7 @@ export default Ember.Component.extend({
           // improve this is we find a better way to do it
           window.location.href = window.location.href;
         })
-        .catch(error => {
+        .catch((error) => {
           throw error;
         });
     },

@@ -84,6 +84,6 @@ after_initialize do
   end
 
   add_to_serializer(:basic_category, :collective_group) do
-    object.groups.where.not(id: Group::AUTO_GROUPS.values).first&.name
+    object.groups.where.not(id: Group::AUTO_GROUPS.values).first
   end
 end
