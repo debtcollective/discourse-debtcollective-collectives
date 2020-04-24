@@ -79,11 +79,11 @@ after_initialize do
   Category.register_custom_field_type("tdc_is_collective", :boolean)
   Site.preloaded_category_custom_fields << "tdc_is_collective" if Site.respond_to? :preloaded_category_custom_fields
 
-  add_to_serializer(:basic_category, :is_collective) do
+  add_to_serializer(:basic_category, :tdc_is_collective) do
     !!object.custom_fields["tdc_is_collective"]
   end
 
-  add_to_serializer(:basic_category, :collective_group) do
+  add_to_serializer(:basic_category, :tdc_collective_group) do
     object.groups.where.not(id: Group::AUTO_GROUPS.values).first
   end
 end

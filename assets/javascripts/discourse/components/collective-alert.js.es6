@@ -46,7 +46,7 @@ export default Ember.Component.extend({
       return false;
     }
 
-    const collectiveGroup = category.collective_group;
+    const collectiveGroup = category.tdc_collective_group;
 
     return currentUser.filteredGroups
       .map((item) => item.name)
@@ -54,7 +54,7 @@ export default Ember.Component.extend({
   },
 
   isCategoryCollective(category) {
-    return category && category.is_collective;
+    return category && category.tdc_is_collective;
   },
 
   // bind events for sticky scrolling
