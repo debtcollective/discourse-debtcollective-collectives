@@ -46,15 +46,15 @@ export default Ember.Component.extend({
       return false;
     }
 
-    const collectiveGroup = category.collective_group;
+    const collectiveGroup = category.tdc_collective_group;
 
     return currentUser.filteredGroups
-      .map(item => item.name)
-      .includes(collectiveGroup);
+      .map((item) => item.name)
+      .includes(collectiveGroup.name);
   },
 
   isCategoryCollective(category) {
-    return category && category.is_collective;
+    return category && category.tdc_is_collective;
   },
 
   // bind events for sticky scrolling
@@ -159,7 +159,7 @@ export default Ember.Component.extend({
           // improve this is we find a better way to do it
           window.location.href = window.location.href;
         })
-        .catch(error => {
+        .catch((error) => {
           throw error;
         });
     },
