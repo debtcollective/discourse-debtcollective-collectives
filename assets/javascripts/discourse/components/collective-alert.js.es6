@@ -112,6 +112,10 @@ export default Ember.Component.extend({
       .css('width', `${mainOutletWidth}px`)
   },
 
+  isCollectivePage() {
+    return window.location.pathname.includes("/c");
+  },
+
   // unbind events and clean up
   willDestroyElement() {
     this._super(...arguments)
@@ -135,7 +139,8 @@ export default Ember.Component.extend({
     if (
       !currentUser ||
       !this.isCategoryCollective(category) ||
-      this.isCollectiveMember()
+      this.isCollectiveMember() ||
+      !this.isCollectivePage()
     ) {
       return this.set('hidden', true)
     }
